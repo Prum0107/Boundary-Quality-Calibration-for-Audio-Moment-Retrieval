@@ -1,0 +1,1351 @@
+{
+  "base_checkpoint": "/root/autodl-tmp/bql_dec_br_20260705/dcase2026_task6_bql_dec_br/best_checkpoint.pth",
+  "bqc_checkpoint": "/root/autodl-tmp/bqc_canonical_20260711/artifacts/checkpoints/bqc_dec_seed2026.pth",
+  "trainable_policy": [
+    "transformer.decoder",
+    "quality_head"
+  ],
+  "summary": {
+    "prediction_heads": {
+      "tensors": 8,
+      "parameters": 132612,
+      "common_tensors": 8,
+      "changed_tensors": 0,
+      "max_abs_delta": 0.0,
+      "policy_trainable": false,
+      "delta_l2": 0.0,
+      "base_l2": 18.719896130587607
+    },
+    "other_frozen": {
+      "tensors": 51,
+      "parameters": 2250246,
+      "common_tensors": 51,
+      "changed_tensors": 0,
+      "max_abs_delta": 0.0,
+      "policy_trainable": false,
+      "delta_l2": 0.0,
+      "base_l2": 138.80289841792774
+    },
+    "quality_head": {
+      "tensors": 4,
+      "parameters": 66306,
+      "common_tensors": 0,
+      "changed_tensors": 0,
+      "max_abs_delta": 0.0,
+      "policy_trainable": true,
+      "delta_l2": 0.0,
+      "base_l2": 0.0
+    },
+    "moment_queries": {
+      "tensors": 1,
+      "parameters": 20,
+      "common_tensors": 1,
+      "changed_tensors": 0,
+      "max_abs_delta": 0.0,
+      "policy_trainable": false,
+      "delta_l2": 0.0,
+      "base_l2": 4.862326948915951
+    },
+    "decoder": {
+      "tensors": 92,
+      "parameters": 3160837,
+      "common_tensors": 92,
+      "changed_tensors": 89,
+      "max_abs_delta": 0.006250809878110886,
+      "policy_trainable": true,
+      "delta_l2": 1.483052085380059,
+      "base_l2": 122.00817112500606
+    },
+    "encoder": {
+      "tensors": 26,
+      "parameters": 1579522,
+      "common_tensors": 26,
+      "changed_tensors": 0,
+      "max_abs_delta": 0.0,
+      "policy_trainable": false,
+      "delta_l2": 0.0,
+      "base_l2": 82.73055740136469
+    }
+  },
+  "important_parameters": {
+    "query_embed.weight": {
+      "name": "query_embed.weight",
+      "group": "moment_queries",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    }
+  },
+  "details": [
+    {
+      "name": "class_embed.bias",
+      "group": "prediction_heads",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "class_embed.weight",
+      "group": "prediction_heads",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "global_rep_pos",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "global_rep_token",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_aud_proj.0.LayerNorm.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_aud_proj.0.LayerNorm.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_aud_proj.0.net.1.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_aud_proj.0.net.1.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_aud_proj.1.LayerNorm.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_aud_proj.1.LayerNorm.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_aud_proj.1.net.1.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_aud_proj.1.net.1.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_txt_proj.0.LayerNorm.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_txt_proj.0.LayerNorm.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_txt_proj.0.net.1.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_txt_proj.0.net.1.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_txt_proj.1.LayerNorm.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_txt_proj.1.LayerNorm.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_txt_proj.1.net.1.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "input_txt_proj.1.net.1.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "quality_head.0.bias",
+      "group": "quality_head",
+      "policy_trainable": true,
+      "status": "only_in_bqc"
+    },
+    {
+      "name": "quality_head.0.weight",
+      "group": "quality_head",
+      "policy_trainable": true,
+      "status": "only_in_bqc"
+    },
+    {
+      "name": "quality_head.3.bias",
+      "group": "quality_head",
+      "policy_trainable": true,
+      "status": "only_in_bqc"
+    },
+    {
+      "name": "quality_head.3.weight",
+      "group": "quality_head",
+      "policy_trainable": true,
+      "status": "only_in_bqc"
+    },
+    {
+      "name": "query_embed.weight",
+      "group": "moment_queries",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "saliency_proj1.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "saliency_proj1.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "saliency_proj2.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "saliency_proj2.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "span_embed.layers.0.bias",
+      "group": "prediction_heads",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "span_embed.layers.0.weight",
+      "group": "prediction_heads",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "span_embed.layers.1.bias",
+      "group": "prediction_heads",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "span_embed.layers.1.weight",
+      "group": "prediction_heads",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "span_embed.layers.2.bias",
+      "group": "prediction_heads",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "span_embed.layers.2.weight",
+      "group": "prediction_heads",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.decoder.bbox_embed.layers.0.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.001292932778596878,
+      "delta_l2": 0.006028287226008964
+    },
+    {
+      "name": "transformer.decoder.bbox_embed.layers.0.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0017713680863380432,
+      "delta_l2": 0.09641836472041952
+    },
+    {
+      "name": "transformer.decoder.bbox_embed.layers.1.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.001234162598848343,
+      "delta_l2": 0.006826370646348253
+    },
+    {
+      "name": "transformer.decoder.bbox_embed.layers.1.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.001848272979259491,
+      "delta_l2": 0.08080772325820726
+    },
+    {
+      "name": "transformer.decoder.bbox_embed.layers.2.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0003276057541370392,
+      "delta_l2": 0.00042595465931650036
+    },
+    {
+      "name": "transformer.decoder.bbox_embed.layers.2.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0013546710833907127,
+      "delta_l2": 0.009376894460189477
+    },
+    {
+      "name": "transformer.decoder.layers.0.activation.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 7.553352043032646e-05,
+      "delta_l2": 7.553352015329578e-05
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_kcontent_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 1.586414873600006e-05,
+      "delta_l2": 5.274214800648615e-05
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_kcontent_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0020180940628051758,
+      "delta_l2": 0.10867618083993515
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_kpos_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0001269560307264328,
+      "delta_l2": 0.00038103003792250745
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_kpos_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0016867555677890778,
+      "delta_l2": 0.12138370823215093
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_qcontent_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.001613609492778778,
+      "delta_l2": 0.008617597428273158
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_qcontent_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0018786340951919556,
+      "delta_l2": 0.12584739539249665
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_qpos_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0016136262565851212,
+      "delta_l2": 0.008617560700538622
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_qpos_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0018559116870164871,
+      "delta_l2": 0.11266984866759823
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_qpos_sine_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0014460515230894089,
+      "delta_l2": 0.008263802731953608
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_qpos_sine_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.001491207629442215,
+      "delta_l2": 0.1125637301097674
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_v_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.001273570116609335,
+      "delta_l2": 0.006843893283643397
+    },
+    {
+      "name": "transformer.decoder.layers.0.ca_v_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0020577609539031982,
+      "delta_l2": 0.12816702688428627
+    },
+    {
+      "name": "transformer.decoder.layers.0.cross_attn.out_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.001264167483896017,
+      "delta_l2": 0.006822723897043352
+    },
+    {
+      "name": "transformer.decoder.layers.0.cross_attn.out_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0019009634852409363,
+      "delta_l2": 0.11893849345487395
+    },
+    {
+      "name": "transformer.decoder.layers.0.linear1.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0015359222888946533,
+      "delta_l2": 0.013869639657534618
+    },
+    {
+      "name": "transformer.decoder.layers.0.linear1.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0023475438356399536,
+      "delta_l2": 0.22464490692383732
+    },
+    {
+      "name": "transformer.decoder.layers.0.linear2.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0014986023306846619,
+      "delta_l2": 0.007060154987905007
+    },
+    {
+      "name": "transformer.decoder.layers.0.linear2.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0025522783398628235,
+      "delta_l2": 0.2350364253038984
+    },
+    {
+      "name": "transformer.decoder.layers.0.norm1.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0012223352678120136,
+      "delta_l2": 0.007350030260031119
+    },
+    {
+      "name": "transformer.decoder.layers.0.norm1.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.001136481761932373,
+      "delta_l2": 0.006901567804034746
+    },
+    {
+      "name": "transformer.decoder.layers.0.norm2.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0010288506746292114,
+      "delta_l2": 0.0061718253374365125
+    },
+    {
+      "name": "transformer.decoder.layers.0.norm2.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0014493465423583984,
+      "delta_l2": 0.00736994772949148
+    },
+    {
+      "name": "transformer.decoder.layers.0.norm3.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0014021601527929306,
+      "delta_l2": 0.006971158078235502
+    },
+    {
+      "name": "transformer.decoder.layers.0.norm3.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0012807250022888184,
+      "delta_l2": 0.007698566620411974
+    },
+    {
+      "name": "transformer.decoder.layers.0.sa_kcontent_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 3.4458935260772705e-08,
+      "delta_l2": 4.7306729877463245e-08
+    },
+    {
+      "name": "transformer.decoder.layers.0.sa_kcontent_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.decoder.layers.0.sa_kpos_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 1.4202669262886047e-08,
+      "delta_l2": 4.035576947728138e-08
+    },
+    {
+      "name": "transformer.decoder.layers.0.sa_kpos_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0011430606245994568,
+      "delta_l2": 0.08604594454202505
+    },
+    {
+      "name": "transformer.decoder.layers.0.sa_qcontent_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0010267067700624466,
+      "delta_l2": 0.005058120815377826
+    },
+    {
+      "name": "transformer.decoder.layers.0.sa_qcontent_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.decoder.layers.0.sa_qpos_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0010267235338687897,
+      "delta_l2": 0.005058129985618996
+    },
+    {
+      "name": "transformer.decoder.layers.0.sa_qpos_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0012220609933137894,
+      "delta_l2": 0.08481208872642679
+    },
+    {
+      "name": "transformer.decoder.layers.0.sa_v_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0012731365859508514,
+      "delta_l2": 0.007212381548732432
+    },
+    {
+      "name": "transformer.decoder.layers.0.sa_v_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.decoder.layers.0.self_attn.out_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.001271418179385364,
+      "delta_l2": 0.007294870725737092
+    },
+    {
+      "name": "transformer.decoder.layers.0.self_attn.out_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.00131937675178051,
+      "delta_l2": 0.1147003204276686
+    },
+    {
+      "name": "transformer.decoder.layers.1.activation.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.00022159377112984657,
+      "delta_l2": 0.00022159377278506274
+    },
+    {
+      "name": "transformer.decoder.layers.1.ca_kcontent_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 3.647059202194214e-06,
+      "delta_l2": 1.3029676659724375e-05
+    },
+    {
+      "name": "transformer.decoder.layers.1.ca_kcontent_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.003282204270362854,
+      "delta_l2": 0.172283797267929
+    },
+    {
+      "name": "transformer.decoder.layers.1.ca_kpos_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0002664215862751007,
+      "delta_l2": 0.0011486813158398147
+    },
+    {
+      "name": "transformer.decoder.layers.1.ca_kpos_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.002545490860939026,
+      "delta_l2": 0.1254102115247789
+    },
+    {
+      "name": "transformer.decoder.layers.1.ca_qcontent_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.001520281657576561,
+      "delta_l2": 0.008396307264786252
+    },
+    {
+      "name": "transformer.decoder.layers.1.ca_qcontent_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0032783602364361286,
+      "delta_l2": 0.1884400722777257
+    },
+    {
+      "name": "transformer.decoder.layers.1.ca_qpos_sine_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.002397403120994568,
+      "delta_l2": 0.014577582477723578
+    },
+    {
+      "name": "transformer.decoder.layers.1.ca_qpos_sine_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0029078125953674316,
+      "delta_l2": 0.13280372730901913
+    },
+    {
+      "name": "transformer.decoder.layers.1.ca_v_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0030959993600845337,
+      "delta_l2": 0.01864373257346199
+    },
+    {
+      "name": "transformer.decoder.layers.1.ca_v_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.004037652164697647,
+      "delta_l2": 0.2697904556694002
+    },
+    {
+      "name": "transformer.decoder.layers.1.cross_attn.out_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.004378676414489746,
+      "delta_l2": 0.02418874479680515
+    },
+    {
+      "name": "transformer.decoder.layers.1.cross_attn.out_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.004499107599258423,
+      "delta_l2": 0.3554587100780492
+    },
+    {
+      "name": "transformer.decoder.layers.1.linear1.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.005335308611392975,
+      "delta_l2": 0.04177214807987383
+    },
+    {
+      "name": "transformer.decoder.layers.1.linear1.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.005925174802541733,
+      "delta_l2": 0.5971052085354773
+    },
+    {
+      "name": "transformer.decoder.layers.1.linear2.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.004401028156280518,
+      "delta_l2": 0.030980031828203653
+    },
+    {
+      "name": "transformer.decoder.layers.1.linear2.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.006250809878110886,
+      "delta_l2": 0.9948561516011712
+    },
+    {
+      "name": "transformer.decoder.layers.1.norm1.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.003969565033912659,
+      "delta_l2": 0.02252307620355827
+    },
+    {
+      "name": "transformer.decoder.layers.1.norm1.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0035289525985717773,
+      "delta_l2": 0.022379603530373635
+    },
+    {
+      "name": "transformer.decoder.layers.1.norm2.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.004468142986297607,
+      "delta_l2": 0.02294637276878988
+    },
+    {
+      "name": "transformer.decoder.layers.1.norm2.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.004314064979553223,
+      "delta_l2": 0.026326488060534402
+    },
+    {
+      "name": "transformer.decoder.layers.1.norm3.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.004898577928543091,
+      "delta_l2": 0.04205165024075206
+    },
+    {
+      "name": "transformer.decoder.layers.1.norm3.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.004735231399536133,
+      "delta_l2": 0.03892661390691629
+    },
+    {
+      "name": "transformer.decoder.layers.1.sa_kcontent_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 2.212822437286377e-06,
+      "delta_l2": 6.2779346027688395e-06
+    },
+    {
+      "name": "transformer.decoder.layers.1.sa_kcontent_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.002416420727968216,
+      "delta_l2": 0.13395633821227781
+    },
+    {
+      "name": "transformer.decoder.layers.1.sa_kpos_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 2.214685082435608e-06,
+      "delta_l2": 6.256090472570068e-06
+    },
+    {
+      "name": "transformer.decoder.layers.1.sa_kpos_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0023357076570391655,
+      "delta_l2": 0.11710792064717995
+    },
+    {
+      "name": "transformer.decoder.layers.1.sa_qcontent_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0016529299318790436,
+      "delta_l2": 0.008468681627395433
+    },
+    {
+      "name": "transformer.decoder.layers.1.sa_qcontent_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.002619292587041855,
+      "delta_l2": 0.13934217896209994
+    },
+    {
+      "name": "transformer.decoder.layers.1.sa_qpos_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0016529709100723267,
+      "delta_l2": 0.008468667451233617
+    },
+    {
+      "name": "transformer.decoder.layers.1.sa_qpos_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0023104101419448853,
+      "delta_l2": 0.126103086291362
+    },
+    {
+      "name": "transformer.decoder.layers.1.sa_v_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0032119532115757465,
+      "delta_l2": 0.020588289038110188
+    },
+    {
+      "name": "transformer.decoder.layers.1.sa_v_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.003711627796292305,
+      "delta_l2": 0.27142325063111655
+    },
+    {
+      "name": "transformer.decoder.layers.1.self_attn.out_proj.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0033693313598632812,
+      "delta_l2": 0.02443233402314835
+    },
+    {
+      "name": "transformer.decoder.layers.1.self_attn.out_proj.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.004063136875629425,
+      "delta_l2": 0.3156475460384615
+    },
+    {
+      "name": "transformer.decoder.norm.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.004535399377346039,
+      "delta_l2": 0.03303981688159811
+    },
+    {
+      "name": "transformer.decoder.norm.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.004794180393218994,
+      "delta_l2": 0.030625286763901954
+    },
+    {
+      "name": "transformer.decoder.query_scale.layers.0.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0013662781566381454,
+      "delta_l2": 0.00712463983234694
+    },
+    {
+      "name": "transformer.decoder.query_scale.layers.0.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.002081766724586487,
+      "delta_l2": 0.11768183554116163
+    },
+    {
+      "name": "transformer.decoder.query_scale.layers.1.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0008945688605308533,
+      "delta_l2": 0.005042037779732872
+    },
+    {
+      "name": "transformer.decoder.query_scale.layers.1.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.002547904849052429,
+      "delta_l2": 0.1299646807912039
+    },
+    {
+      "name": "transformer.decoder.ref_anchor_head.layers.0.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0025866515934467316,
+      "delta_l2": 0.010290602814407808
+    },
+    {
+      "name": "transformer.decoder.ref_anchor_head.layers.0.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0036562085151672363,
+      "delta_l2": 0.14242045947452767
+    },
+    {
+      "name": "transformer.decoder.ref_anchor_head.layers.1.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0002354830503463745,
+      "delta_l2": 0.000235483053646638
+    },
+    {
+      "name": "transformer.decoder.ref_anchor_head.layers.1.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0027471929788589478,
+      "delta_l2": 0.01146327889841555
+    },
+    {
+      "name": "transformer.decoder.ref_point_head.layers.0.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0007491279393434525,
+      "delta_l2": 0.0021901784202314947
+    },
+    {
+      "name": "transformer.decoder.ref_point_head.layers.0.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0008078515529632568,
+      "delta_l2": 0.03319041801376333
+    },
+    {
+      "name": "transformer.decoder.ref_point_head.layers.1.bias",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0011366195976734161,
+      "delta_l2": 0.0076438392750152635
+    },
+    {
+      "name": "transformer.decoder.ref_point_head.layers.1.weight",
+      "group": "decoder",
+      "policy_trainable": true,
+      "max_abs_delta": 0.0014105793088674545,
+      "delta_l2": 0.03574458053009259
+    },
+    {
+      "name": "transformer.encoder.layers.0.activation.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.linear1.bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.linear1.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.linear2.bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.linear2.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.norm1.bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.norm1.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.norm2.bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.norm2.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.self_attn.in_proj_bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.self_attn.in_proj_weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.self_attn.out_proj.bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.0.self_attn.out_proj.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.activation.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.linear1.bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.linear1.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.linear2.bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.linear2.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.norm1.bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.norm1.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.norm2.bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.norm2.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.self_attn.in_proj_bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.self_attn.in_proj_weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.self_attn.out_proj.bias",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.encoder.layers.1.self_attn.out_proj.weight",
+      "group": "encoder",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.activation.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.linear1.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.linear1.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.linear2.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.linear2.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.norm1.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.norm1.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.norm2.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.norm2.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.self_attn.in_proj_bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.self_attn.in_proj_weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.self_attn.out_proj.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.0.self_attn.out_proj.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.activation.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.linear1.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.linear1.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.linear2.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.linear2.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.norm1.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.norm1.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.norm2.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.norm2.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.self_attn.in_proj_bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.self_attn.in_proj_weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.self_attn.out_proj.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "transformer.t2v_encoder.layers.1.self_attn.out_proj.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "txt_position_embed.LayerNorm.bias",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "txt_position_embed.LayerNorm.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    },
+    {
+      "name": "txt_position_embed.position_embeddings.weight",
+      "group": "other_frozen",
+      "policy_trainable": false,
+      "max_abs_delta": 0.0,
+      "delta_l2": 0.0
+    }
+  ]
+}

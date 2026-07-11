@@ -1,0 +1,119 @@
+--- a/src/qd_detr.py
++++ b/src/qd_detr.py
+@@ -81,6 +81,13 @@
+         self.saliency_proj1 = nn.Linear(hidden_dim, hidden_dim)
+         self.saliency_proj2 = nn.Linear(hidden_dim, hidden_dim)
+ 
++        self.quality_head = nn.Sequential(
++            nn.Linear(hidden_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Dropout(0.1),
++            nn.Linear(hidden_dim, 2),
++        )
++
+         self.hidden_dim = hidden_dim
+         self.global_rep_token = torch.nn.Parameter(torch.randn(hidden_dim))
+         self.global_rep_pos = torch.nn.Parameter(torch.randn(hidden_dim))
+@@ -133,6 +140,10 @@
+             outputs_coord = outputs_coord.sigmoid()
+         out = {'pred_logits': outputs_class[-1], 'pred_spans': outputs_coord[-1]}
+ 
++        quality_out = self.quality_head(hs[-1])
++        out['quality_reg'] = quality_out[..., 0]
++        out['quality_logit'] = quality_out[..., 1]
++
+         txt_mem = memory[:, src_aud.shape[1]:]  # (bsz, L_txt, d)
+         aud_mem = memory[:, :src_aud.shape[1]]  # (bsz, L_aud, d)
+             
+@@ -192,6 +203,11 @@
+         self.span_loss_type = span_loss_type
+         self.max_a_l = max_a_l
+         self.saliency_margin = saliency_margin
++        self.bql_lambda_reg = 1.0
++        self.bql_lambda_cls = 1.0
++        self.bql_lambda_list = 0.5
++        self.bql_tau = 0.1
++        self.bql_iou_threshold = 0.7
+ 
+         # foreground and background classification
+         self.foreground_label = 0
+@@ -326,12 +342,49 @@
+         batch_idx = torch.cat([torch.full_like(tgt, i) for i, (_, tgt) in enumerate(indices)])
+         tgt_idx = torch.cat([tgt for (_, tgt) in indices])
+         return batch_idx, tgt_idx
++
++    def loss_bql(self, outputs, targets, indices, **kwargs):
++        import torch.nn.functional as Fbql
++        pred_spans = outputs['pred_spans']
++        quality_reg = outputs['quality_reg']
++        quality_logit = outputs['quality_logit']
++        from span_utils import span_cxw_to_xx, temporal_iou
++        B, N = pred_spans.shape[:2]
++        q_targets = pred_spans.new_zeros((B, N))
++        span_labels = targets["span_labels"] if "span_labels" in targets else targets
++        for b in range(B):
++            pred_xx = span_cxw_to_xx(pred_spans[b])
++            tgt_spans = span_labels[b]['spans'] if b < len(span_labels) and 'spans' in span_labels[b] else None
++            if tgt_spans is None or len(tgt_spans) == 0:
++                continue
++            tgt_xx = span_cxw_to_xx(tgt_spans)
++            ps = pred_xx.unsqueeze(1)
++            ts = tgt_xx.unsqueeze(0)
++            inter = (torch.minimum(ps[..., 1], ts[..., 1]) - torch.maximum(ps[..., 0], ts[..., 0])).clamp(min=0)
++            union = (torch.maximum(ps[..., 1], ts[..., 1]) - torch.minimum(ps[..., 0], ts[..., 0])).clamp(min=1e-6)
++            iou_mat = inter / union
++            q_targets[b] = iou_mat.max(dim=1)[0]
++        y_targets = (q_targets >= self.bql_iou_threshold).float()
++        q_pred = torch.sigmoid(quality_reg)
++        L_qreg = Fbql.smooth_l1_loss(q_pred, q_targets)
++        L_qcls = Fbql.binary_cross_entropy_with_logits(quality_logit, y_targets)
++        score = quality_logit
++        with torch.no_grad():
++            soft_target = Fbql.softmax(q_targets / self.bql_tau, dim=1)
++        log_pred = Fbql.log_softmax(score, dim=1)
++        L_list = -(soft_target * log_pred).sum(dim=1).mean()
++        return {
++            "loss_bql_reg": L_qreg * self.bql_lambda_reg,
++            "loss_bql_cls": L_qcls * self.bql_lambda_cls,
++            "loss_bql_list": L_list * self.bql_lambda_list,
++        }
+ 
+     def get_loss(self, loss, outputs, targets, indices, **kwargs):
+         loss_map = {
+             "spans": self.loss_spans,
+             "labels": self.loss_labels,
+             "saliency": self.loss_saliency,
++            "bql": self.loss_bql,
+         }
+         assert loss in loss_map, f'do you really want to compute {loss} loss?'
+         return loss_map[loss](outputs, targets, indices, **kwargs)
+@@ -363,7 +416,7 @@
+                 losses_target = self.losses
+ 
+                 for loss in losses_target:
+-                    if "saliency" == loss:  # skip as it is only in the top layer
++                    if "saliency" == loss or "bql" == loss:  # skip as they are only in the top layer
+                         continue
+                     kwargs = {}
+                     l_dict = self.get_loss(loss, aux_outputs, targets, indices, **kwargs)
+@@ -444,7 +497,10 @@
+         "loss_span": args.span_loss_coef,
+         "loss_giou": args.giou_loss_coef,
+         "loss_label": args.label_loss_coef,
+-        "loss_saliency": args.lw_saliency
++        "loss_saliency": args.lw_saliency,
++        "loss_bql_reg": 1.0,
++        "loss_bql_cls": 1.0,
++        "loss_bql_list": 1.0,
+     }
+ 
+     if args.aux_loss:
+@@ -453,7 +509,7 @@
+             aux_weight_dict.update({k + f'_{i}': v for k, v in weight_dict.items() if k != "loss_saliency"})
+         weight_dict.update(aux_weight_dict)
+ 
+-    losses = ['spans', 'labels', 'saliency']
++    losses = ['spans', 'labels', 'saliency', 'bql']
+     criterion = SetCriterion(
+         matcher=matcher,
+         weight_dict=weight_dict,
