@@ -56,9 +56,22 @@ The exact historical implementation is retained in
 `src/legacy_non_detached/qd_detr.py`. A controlled rerun of the corrected code
 is required before the pure quality-estimation mechanism claim is retained.
 Existing checkpoints remain valid historical artifacts but are labelled
-`legacy_non_detached` until that rerun is complete.
+`legacy_non_detached`.
 
-## 3. Claims Allowed Before Rerun
+## 3. Corrected Rerun: Completed
+
+The detached-target mechanism ablation was completed on 2026-07-11 using five
+seeds. All 35 runs recorded `target_requires_grad=false`, and gradient smoke
+tests confirmed that only the intended parameter groups received gradients.
+
+The corrected joint objective (decoder + host losses + detached quality losses)
+achieved 17.76% mean R1@0.7, compared with 16.20% for matched decoder + host
+loss training. Shuffling the detached quality labels reduced the joint result
+to 13.63%. The controlled quality-supervision contribution is +1.56 points.
+
+See [`results/mechanism_ablation_20260711.md`](../results/mechanism_ablation_20260711.md).
+
+## 4. Updated Claim Boundary
 
 Allowed:
 
@@ -67,8 +80,15 @@ Allowed:
 - the trained system improved the audited ranking metrics;
 - the quality objective as implemented influenced decoder optimization.
 
-Not yet allowed:
+Still not allowed:
 
-- the gain comes from pure boundary-quality estimation;
-- decoder features learned only to predict a fixed IoU target;
-- the regression loss is independent of span optimization.
+- the historical non-detached gain comes from pure quality estimation;
+- quality calibration recovers candidates absent from the host candidate pool;
+- the result establishes cross-host or cross-dataset generalization.
+
+Supported after the corrected rerun:
+
+- detached candidate-specific quality supervision adds +1.56 R1@0.7 points
+  over matched host-loss decoder adaptation;
+- shuffled quality labels do not reproduce the gain;
+- updating moment anchors is not required for the main improvement.

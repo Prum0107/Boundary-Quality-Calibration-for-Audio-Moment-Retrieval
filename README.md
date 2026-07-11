@@ -79,6 +79,24 @@ changes.
 The quality score contributes a controlled **+1.19 R1@0.7 points** over
 matched confidence ranking. All five seed-level deltas are positive.
 
+## Corrected Detached-Target Rerun
+
+The mechanism audit has now been rerun with IoU targets explicitly detached.
+All entries are five-seed means under one evaluator.
+
+| Controlled variant | R1@0.7 | Gain vs frozen host | Spearman |
+|---|---:|---:|---:|
+| Frozen QD-DETR host | 14.33 | - | 0.239 |
+| Quality head only | 16.27 | +1.95 | 0.367 |
+| Anchors + quality head | 16.38 | +2.05 | 0.369 |
+| Decoder + host loss | 16.20 | +1.87 | 0.237 |
+| **Decoder + host + detached quality** | **17.76** | **+3.43** | **0.392** |
+| Decoder + host + shuffled quality | 13.63 | -0.70 | 0.313 |
+
+Correct IoU supervision adds **+1.56 R1@0.7 points** over matched decoder
+adaptation. Updating moment anchors adds only 0.10 points over quality-head-only
+training. See the full [mechanism ablation report](results/mechanism_ablation_20260711.md).
+
 ## Research Status and Important Caveat
 
 > [!WARNING]
@@ -102,9 +120,9 @@ The corrected implementation contains:
 q_targets = q_targets.detach()
 ```
 
-The corrected version has **not yet been rerun**, so the historical 17.73
-result must not be attributed to pure quality estimation until the controlled
-rerun is complete. Full details are recorded in
+The historical 17.73 result remains labelled as non-detached. A separate
+controlled rerun of the corrected implementation is reported above; its full
+system result is 17.76 across five seeds. Full audit details are recorded in
 [Code Audit Findings](docs/CODE_AUDIT.md).
 
 ## Repository Layout
@@ -119,8 +137,10 @@ rerun is complete. Full details are recorded in
 |   |-- qd_detr_bqc_legacy.patch
 |   `-- qd_detr_bqc_detached.patch
 |-- scripts/legacy_reproduction/  original server training/evaluation entries
+|-- scripts/run_mechanism_ablation.py  corrected controlled rerun
 |-- tools/audit_parameters.py     checkpoint parameter-delta audit
 |-- audits/                       machine-readable audit output
+|-- results/                      corrected mechanism-ablation report
 `-- docs/                         architecture, experiment map, code audit
 ```
 
