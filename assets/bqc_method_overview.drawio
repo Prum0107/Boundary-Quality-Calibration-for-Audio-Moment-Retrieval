@@ -1,0 +1,69 @@
+<mxfile host="app.diagrams.net" modified="2026-07-12T00:00:00.000Z" agent="Codex" version="24.7.17" type="device">
+  <diagram id="bqc-method" name="BQC-Dec Method">
+    <mxGraphModel dx="1400" dy="760" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="760" math="1" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="Training-Stage Boundary Quality Calibration" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=25;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="350" y="30" width="700" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="in" value="&lt;b&gt;Long audio + query&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=2;fontSize=15;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="55" y="205" width="175" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="encoder" value="&lt;b&gt;Encoder&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#64748B&quot;&gt;frozen&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=2;fontSize=15;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="290" y="205" width="175" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="decoder" value="&lt;b&gt;Existing decoder&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#1D4ED8&quot;&gt;trainable&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2.5;fontSize=15;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="555" y="205" width="200" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="anchors" value="&lt;b&gt;Temporal reference points&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#64748B&quot;&gt;frozen&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#F8FAFC;strokeColor=#64748B;strokeWidth=2;fontSize=13;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="570" y="100" width="170" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="readout" value="&lt;b&gt;Span / class heads&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#64748B&quot;&gt;frozen readout&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="850" y="125" width="210" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="hostout" value="start, end&lt;br&gt;confidence" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FFFFFF;strokeColor=#64748B;strokeWidth=2;fontSize=14;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="125" width="170" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="qhead" value="&lt;b&gt;Quality head&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#1D4ED8&quot;&gt;trainable&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2.5;fontSize=15;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="850" y="285" width="210" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="qout" value="qreg, qcls&lt;br&gt;&lt;b&gt;quality ranking&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#EFF6FF;strokeColor=#2563EB;strokeWidth=2;fontSize=14;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="285" width="170" height="85" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="trainband" value="TRAINING ONLY" style="swimlane;html=1;rounded=1;startSize=30;horizontal=1;fillColor=#FFFFFF;swimlaneFillColor=#F8FAFC;strokeColor=#CBD5E1;dashed=1;dashPattern=6 4;strokeWidth=1.5;fontSize=13;fontStyle=1;fontColor=#475569;" vertex="1" parent="1">
+          <mxGeometry x="150" y="445" width="1100" height="220" as="geometry"/>
+        </mxCell>
+        <mxCell id="hostloss" value="&lt;b&gt;Host objective&lt;/b&gt;&lt;br&gt;span + GIoU + class + saliency" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=2;fontSize=14;fontColor=#14532D;" vertex="1" parent="trainband">
+          <mxGeometry x="45" y="75" width="255" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="targets" value="&lt;b&gt;Detached quality targets&lt;/b&gt;&lt;br&gt;IoU regression · IoU@0.7&lt;br&gt;within-query order" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=2;fontSize=14;fontColor=#78350F;" vertex="1" parent="trainband">
+          <mxGeometry x="350" y="75" width="255" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="joint" value="&lt;b&gt;Joint objective&lt;/b&gt;&lt;br&gt;L&lt;sub&gt;host&lt;/sub&gt; + L&lt;sub&gt;quality&lt;/sub&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2.5;fontSize=16;fontColor=#1E3A8A;" vertex="1" parent="trainband">
+          <mxGeometry x="675" y="75" width="200" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="note" value="IoU targets use stop-gradient&lt;br&gt;Ground truth is absent at inference" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#475569;" vertex="1" parent="trainband">
+          <mxGeometry x="900" y="83" width="185" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="in" target="encoder"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="encoder" target="decoder"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563EB;strokeWidth=2;" edge="1" parent="1" source="anchors" target="decoder"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="decoder" target="readout"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="800" y="168"/></Array></mxGeometry></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="readout" target="hostout"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563EB;strokeWidth=2.5;" edge="1" parent="1" source="decoder" target="qhead"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="800" y="328"/></Array></mxGeometry></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563EB;strokeWidth=2.5;" edge="1" parent="1" source="qhead" target="qout"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="trainband" source="hostloss" target="joint"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="325" y="185"/><mxPoint x="650" y="185"/><mxPoint x="650" y="118"/></Array></mxGeometry></mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#D97706;strokeWidth=2;" edge="1" parent="trainband" source="targets" target="joint"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" value="backward update" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;dashed=1;dashPattern=6 4;strokeColor=#2563EB;strokeWidth=2;fontSize=12;fontColor=#1D4ED8;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="joint" target="decoder"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="760" y="545"/><mxPoint x="760" y="330"/><mxPoint x="655" y="330"/></Array></mxGeometry></mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;dashed=1;dashPattern=6 4;strokeColor=#2563EB;strokeWidth=2;" edge="1" parent="1" source="joint" target="qhead"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="930" y="545"/><mxPoint x="930" y="410"/></Array></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

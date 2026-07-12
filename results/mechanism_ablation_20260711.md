@@ -2,7 +2,7 @@
 
 Date: 2026-07-11  
 Host: QD-DETR initialized from the same Clotho-pretrained, CASTELLA-finetuned checkpoint  
-Evaluation: CASTELLA dev-test, 1,347 queries  
+Evaluation: CASTELLA development-testing, 1,347 queries
 Seeds: 2026, 2027, 2028, 2029, 2030
 
 ## Purpose
@@ -16,9 +16,9 @@ reported BQC-Dec gain:
 4. correct detached IoU supervision contributes beyond decoder adaptation.
 
 Every IoU target is computed under `torch.no_grad()` and explicitly detached.
-Model selection uses dev-val only. Quality variants are ranked by `qcls`, while
+Model selection uses development-validation only. Quality variants are ranked by `qcls`, while
 the host-only variant is ranked by foreground confidence. No score rule is
-selected on dev-test.
+selected on development-testing.
 
 ## Primary Five Variants
 
@@ -95,4 +95,3 @@ Server artifacts are stored in:
 ```text
 /root/autodl-tmp/bqc_mechanism_ablation_20260711/
 ```
-

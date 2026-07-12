@@ -2,153 +2,142 @@
 
 # Boundary Quality Calibration for Audio Moment Retrieval
 
-**IoU-aware candidate scoring for DETR-style temporal audio grounding**
+**Train candidate scores to reflect temporal boundary quality, not only foreground confidence.**
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-research_code-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![License](https://img.shields.io/badge/License-MIT-059669.svg)](LICENSE)
-[![Audit](https://img.shields.io/badge/parameter_scope-audited-2563EB.svg)](audits/parameter_audit_seed2026.json)
+[![Target audit](https://img.shields.io/badge/IoU_targets-detached-2563EB.svg)](docs/CODE_AUDIT.md)
+[![Seeds](https://img.shields.io/badge/evaluation-5_seeds-7C3AED.svg)](results/mechanism_ablation_20260711.md)
 
 </div>
 
-## Overview
+## Why BQC?
 
-Audio Moment Retrieval (AMR) receives an untrimmed audio recording and a
-natural-language query, then returns the start and end time of the matching
-moment. DETR-style hosts generate a fixed set of candidate windows and usually
-rank them by foreground confidence. That score is not necessarily calibrated
-to temporal Intersection over Union (IoU).
+Audio Moment Retrieval (AMR) receives a long audio recording and a natural-
+language query, then predicts the start and end time of the matching moment.
+DETR-style AMR systems generate several candidate windows and commonly rank
+them by foreground confidence. Foreground confidence is not trained to estimate
+temporal Intersection over Union (IoU), so the most confident candidate may not
+have the best boundaries.
 
-Boundary Quality Calibration (BQC) studies a narrower question:
+On the CASTELLA development-testing split, the frozen QD-DETR host reaches an
+R1@0.7 of **14.33%**, while Oracle@10 reaches **28.88%**. Better candidates
+often exist in the candidate pool but are not ranked first.
 
-> Given a generated candidate pool, can the ranking score be trained to track
-> temporal boundary quality more faithfully?
-
-The main variant, **BQC-Dec**, attaches a quality head to the final transformer
-decoder states and supervises candidate quality from three views:
+**Boundary Quality Calibration (BQC-Dec)** adds an explicit quality head to
+complete decoder slots and trains the ranking signal with three detached
+targets:
 
 1. continuous IoU regression;
 2. IoU@0.7 correctness classification;
 3. within-query list-wise ordering.
 
-## Method at a Glance
+## Method
 
-```mermaid
-flowchart LR
-    A[Long audio + text query] --> E[Query-dependent encoder]
-    Q[Learned moment queries / anchors] --> D[Existing transformer decoder]
-    E --> D
-    D --> H[Decoder slot states]
-    H --> S[Frozen span and class heads]
-    H --> B[Added quality head]
-    S --> W[Candidate start, end, confidence]
-    B --> R[IoU regression]
-    B --> C[IoU@0.7 classification]
-    B --> L[Within-query ordering]
-    B --> K[Quality-ranked top-1]
-```
+<p align="center">
+  <img src="assets/bqc_method_overview.png" alt="BQC-Dec method overview" width="920">
+</p>
 
-Under the audited BQC-Dec freeze policy:
+During BQC-Dec fine-tuning:
 
-| Component | Status during BQC fine-tuning |
+| Component | Status |
 |---|---|
-| Moment queries / trainable anchors | Frozen |
-| Transformer encoder | Frozen |
-| Transformer decoder layers | Trainable |
-| Span and class heads | Frozen |
-| Quality head | Trainable, newly added |
+| Audio-text encoder | Frozen |
+| Learned temporal reference points (`query_embed`) | Frozen |
+| Existing transformer decoder | **Trainable** |
+| Existing span/class readout heads | Frozen |
+| New quality head | **Trainable** |
 
-The method fine-tunes the **existing decoder layers**. It does not redesign the
-decoder architecture and does not adapt the moment anchors in the reported
-configuration. See [Architecture Notes](docs/ARCHITECTURE.md) and the
-[Parameter Audit](docs/CODE_AUDIT.md).
+The decoder architecture and span readout interface are unchanged. Frozen
+readout parameters still pass the original host-loss gradients into the
+decoder. IoU targets are computed from current predicted spans and annotations
+under `stop-gradient`; no ground-truth window is used at inference.
 
-## Audited Historical Results
+## Main Results
 
-Results below use QD-DETR on CASTELLA dev-test and five seeds. The two BQC-Dec
-rows evaluate identical checkpoints and predicted spans; only the ranking score
-changes.
+All main numbers use one unified evaluator on CASTELLA development-testing
+(1,347 queries). Checkpoints, hyperparameters, and score rules are selected on
+development-validation. Results are means over seeds 2026--2030.
 
-| Method | R1@0.7 | Gain vs host | Spearman | Pairwise accuracy |
-|---|---:|---:|---:|---:|
-| QD-DETR confidence | 14.03 | - | 0.2320 | 0.6493 |
-| IoU-aware confidence baseline | 16.60 | +2.57 | 0.2888 | 0.6757 |
-| BQC-Dec matched confidence | 16.54 | +2.51 | 0.2424 | 0.6560 |
-| **BQC-Dec quality ranking** | **17.73** | **+3.70** | **0.3900** | **0.7185** |
+### Mechanism study
 
-The quality score contributes a controlled **+1.19 R1@0.7 points** over
-matched confidence ranking. All five seed-level deltas are positive.
+| Variant | Trainable scope | R1@0.7 | Gain vs frozen host | Spearman |
+|---|---|---:|---:|---:|
+| Frozen QD-DETR host | None | 14.33 | - | 0.239 |
+| Quality head only | Quality head | 16.27 +/- 0.06 | +1.95 | 0.367 |
+| Reference points + quality head | Reference points, quality head | 16.38 +/- 0.12 | +2.05 | 0.369 |
+| Decoder + host loss | Decoder | 16.20 +/- 0.31 | +1.87 | 0.237 |
+| Decoder + quality only | Decoder, quality head | 10.32 +/- 1.88 | -4.01 | 0.366 |
+| Decoder + host + shuffled quality | Decoder, quality head | 13.63 +/- 1.70 | -0.70 | 0.313 |
+| **BQC-Dec: host + detached quality** | **Decoder, quality head** | **17.76 +/- 0.27** | **+3.43** | **0.392** |
 
-## Corrected Detached-Target Rerun
+BQC-Dec improves over matched decoder adaptation by **+1.56 R1@0.7
+percentage points**. All five paired seed differences are positive; the 95%
+Student-t interval is **[+1.17, +1.95]**.
 
-The mechanism audit has now been rerun with IoU targets explicitly detached.
-All entries are five-seed means under one evaluator.
+### Same-candidate ranking and calibration
 
-| Controlled variant | R1@0.7 | Gain vs frozen host | Spearman |
-|---|---:|---:|---:|
-| Frozen QD-DETR host | 14.33 | - | 0.239 |
-| Quality head only | 16.27 | +1.95 | 0.367 |
-| Anchors + quality head | 16.38 | +2.05 | 0.369 |
-| Decoder + host loss | 16.20 | +1.87 | 0.237 |
-| **Decoder + host + detached quality** | **17.76** | **+3.43** | **0.392** |
-| Decoder + host + shuffled quality | 13.63 | -0.70 | 0.313 |
+The following ranking comparison uses identical BQC-Dec checkpoints and
+predicted spans; only the ranking score changes.
 
-Correct IoU supervision adds **+1.56 R1@0.7 points** over matched decoder
-adaptation. Updating moment anchors adds only 0.10 points over quality-head-only
-training. See the full [mechanism ablation report](results/mechanism_ablation_20260711.md).
+| Measure | BQC quality | Host confidence / reference |
+|---|---:|---:|
+| R1@0.7 | **17.76 +/- 0.27** | 16.30 +/- 0.24 |
+| R1@0.5 | **28.05 +/- 0.43** | 26.62 +/- 0.39 |
+| IoU regression MAE | **0.163 +/- 0.008** | - |
+| IoU@0.7 Brier score | **0.0385 +/- 0.0012** | confidence: 0.3122 +/- 0.0030 |
+| Empirical-prevalence Brier reference | **0.0449 +/- 0.0012** | - |
+| IoU@0.7 ECE (10 bins) | **0.0201 +/- 0.0017** | confidence: 0.3532 +/- 0.0034 |
 
-## Research Status and Important Caveat
+Quality ranking adds **+1.45 percentage points** over confidence ranking on
+identical spans. The Brier result also beats the empirical-prevalence reference,
+so the low error is not explained only by the approximately 4.7% positive rate.
 
-> [!WARNING]
-> The checkpoints behind the table above were trained before an IoU-target
-> gradient issue was identified. The historical implementation constructs
-> `q_targets` from predicted spans without explicitly detaching them. In
-> PyTorch, slice assignment retains a `CopySlices` gradient path, so the IoU
-> regression term can also backpropagate through its target into predicted
-> spans.
+## Evaluation Scope
 
-The repository separates the two versions explicitly:
+DCASE 2026 names the CASTELLA train, validation, and test splits
+development-training, development-validation, and development-testing. This
+repository reports CASTELLA development-testing results. The separate
+100-recording DCASE challenge evaluation set has no public temporal annotations
+and is not evaluated here.
 
-```text
-src/legacy_non_detached/   exact code behind the audited historical result
-src/bqc/                   corrected target-detached implementation
-```
-
-The corrected implementation contains:
-
-```python
-q_targets = q_targets.detach()
-```
-
-The historical 17.73 result remains labelled as non-detached. A separate
-controlled rerun of the corrected implementation is reported above; its full
-system result is 17.76 across five seeds. Full audit details are recorded in
-[Code Audit Findings](docs/CODE_AUDIT.md).
+Current evidence is limited to **QD-DETR on CASTELLA**. A CG-DETR audio
+adaptation did not produce a usable candidate pool, so cross-host
+generalization remains untested. BQC-Dec improves selection among generated
+candidates; it cannot recover a queried event missing from the candidate pool
+and does not directly move boundaries at inference.
 
 ## Repository Layout
 
 ```text
 .
+|-- assets/                       README method figure and editable source
 |-- src/
-|   |-- baseline/                 original QD-DETR host file
-|   |-- legacy_non_detached/      exact historical BQC implementation
-|   `-- bqc/                      corrected detached-target implementation
+|   |-- baseline/                 QD-DETR host source
+|   |-- bqc/                      current detached-target implementation
+|   `-- legacy_non_detached/      superseded source retained for provenance
 |-- patches/
-|   |-- qd_detr_bqc_legacy.patch
-|   `-- qd_detr_bqc_detached.patch
-|-- scripts/legacy_reproduction/  original server training/evaluation entries
-|-- scripts/run_mechanism_ablation.py  corrected controlled rerun
-|-- tools/audit_parameters.py     checkpoint parameter-delta audit
-|-- audits/                       machine-readable audit output
-|-- results/                      corrected mechanism-ablation report
-`-- docs/                         architecture, experiment map, code audit
+|   |-- qd_detr_bqc_detached.patch
+|   `-- qd_detr_bqc_legacy.patch
+|-- scripts/
+|   |-- run_mechanism_ablation.py
+|   `-- legacy_reproduction/      historical wrappers with server paths
+|-- tools/audit_parameters.py
+|-- tests/test_source_invariants.py
+|-- audits/                       machine-readable parameter audit
+|-- results/                      verified result summaries
+`-- docs/                         architecture, experiment map, and code audit
 ```
+
+The legacy non-detached implementation is retained only to document the
+project history. Current claims and tables use the corrected detached-target
+rerun.
 
 ## Using the Code
 
-The host implementation follows the DCASE AMR baseline built from QD-DETR.
-Dataset annotations, extracted audio/text features, and checkpoints are not
-redistributed.
+This repository contains the BQC source, patches, controls, and audits. The
+official AMR dataset features and model checkpoints are not redistributed.
 
 ### 1. Install dependencies
 
@@ -158,21 +147,21 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Apply the corrected BQC source
+### 2. Apply BQC to a compatible QD-DETR AMR checkout
 
-Either copy the corrected host file into a compatible QD-DETR AMR checkout:
+Copy the current source:
 
 ```bash
 cp src/bqc/qd_detr.py /path/to/amr_host/src/qd_detr.py
 ```
 
-or inspect/apply the minimal patch:
+or inspect and apply the patch:
 
 ```bash
 git apply patches/qd_detr_bqc_detached.patch
 ```
 
-### 3. Audit a checkpoint
+### 3. Audit checkpoint parameter changes
 
 ```bash
 python tools/audit_parameters.py \
@@ -181,48 +170,34 @@ python tools/audit_parameters.py \
   --output parameter_audit.json
 ```
 
-The original experiment wrappers are preserved under
-`scripts/legacy_reproduction/`. They intentionally retain the original server
-paths for exact provenance and require path adaptation before use elsewhere.
-
-## What the Method Does and Does Not Do
-
-**BQC-Dec does:**
-
-- estimate quality for candidates already produced by the host;
-- train the ranking interface with IoU-aware and query-local supervision;
-- improve selection within the available top-K candidate pool.
-
-**BQC-Dec does not:**
-
-- recover a moment missing from the candidate pool;
-- use ground-truth windows during inference;
-- directly refine start/end boundaries at test time;
-- establish cross-host generalization.
+The legacy reproduction wrappers retain their original absolute server paths
+for provenance and require local path adaptation before use.
 
 ## Reproducibility Notes
 
-- [Experiment Map](docs/EXPERIMENT_MAP.md)
-- [Architecture Notes](docs/ARCHITECTURE.md)
-- [Code Audit Findings](docs/CODE_AUDIT.md)
-- [Third-Party Notices](THIRD_PARTY_NOTICES.md)
-
-Large artifacts remain outside Git. Checkpoints should never be committed to
-this repository.
+- [Detached-target mechanism results](results/mechanism_ablation_20260711.md)
+- [Five-seed ranking and calibration audit](results/calibration_audit_20260712.md)
+- [Experiment map](docs/EXPERIMENT_MAP.md)
+- [Architecture notes](docs/ARCHITECTURE.md)
+- [Code audit findings](docs/CODE_AUDIT.md)
+- [Parameter audit](audits/parameter_audit_seed2026.json)
+- [Third-party notices](THIRD_PARTY_NOTICES.md)
 
 ## References
 
-- N. Carion et al., "End-to-End Object Detection with Transformers," ECCV,
+- N. Carion et al., “End-to-End Object Detection with Transformers,” ECCV,
   2020. [Paper](https://arxiv.org/abs/2005.12872)
-- W. Moon et al., "Query-Dependent Video Representation for Moment Retrieval
-  and Highlight Detection," CVPR, 2023.
-  [Paper](https://arxiv.org/abs/2303.13874) |
+- W. Moon et al., “Query-Dependent Video Representation for Moment Retrieval
+  and Highlight Detection,” CVPR, 2023.
+  [Paper](https://arxiv.org/abs/2303.13874) ·
   [Code](https://github.com/wjun0830/QD-DETR)
-- H. Munakata et al., "Language-based Audio Moment Retrieval," 2024/2025.
+- H. Munakata et al., “Language-based Audio Moment Retrieval,” ICASSP, 2025.
   [Paper](https://arxiv.org/abs/2409.15672)
+- H. Munakata et al., “CASTELLA: Long Audio Dataset with Captions and Temporal
+  Boundaries,” 2026. [Paper](https://arxiv.org/abs/2511.15131)
 
 ## Acknowledgements
 
-This repository builds on DETR, Moment-DETR, QD-DETR, and the DCASE Audio
-Moment Retrieval baseline. Their open-source implementations and task design
-made the present analysis possible.
+This work builds on DETR, Moment-DETR, QD-DETR, and the DCASE 2026 Audio Moment
+Retrieval baseline. Their open-source implementations and task design made this
+study possible.
