@@ -10,6 +10,11 @@ class SourceInvariantTests(unittest.TestCase):
         source = (ROOT / "src/bqc/qd_detr.py").read_text(encoding="utf-8")
         self.assertIn("q_targets = q_targets.detach()", source)
 
+    def test_current_source_uses_bqc_identifiers(self):
+        source = (ROOT / "src/bqc/qd_detr.py").read_text(encoding="utf-8")
+        self.assertIn("loss_bqc", source)
+        self.assertNotIn("bql", source.lower())
+
     def test_legacy_source_preserves_historical_behavior(self):
         source = (ROOT / "src/legacy_non_detached/qd_detr.py").read_text(
             encoding="utf-8"

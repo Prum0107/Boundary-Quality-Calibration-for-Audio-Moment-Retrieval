@@ -30,7 +30,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 
-HOST_REPO = Path("/root/autodl-tmp/bql_final_20260705/dcase2026_task6_bql_final")
+HOST_REPO = Path(os.environ.get("BQC_HOST_REPO", "/path/to/qd_detr_host"))
 HOST_CKPT = HOST_REPO / "best_checkpoint.pth"
 HOST_CONFIG = HOST_REPO / "config_finetune_from_clotho_official_run.yml"
 DEFAULT_OUT = Path("/root/autodl-tmp/bqc_mechanism_ablation_20260711")
@@ -196,7 +196,10 @@ def configure_variant(model, variant):
 def weighted_host_loss(loss_dict, criterion):
     terms = []
     for name, value in loss_dict.items():
-        if name.startswith("loss_bql"):
+        # The preserved host checkout predates the public BQC naming. Match
+        # quality terms by their objective suffix so both checkpoint-era and
+        # current loss dictionaries are excluded from the host-only control.
+        if name.startswith("loss_") and name.endswith(("_reg", "_cls", "_list")):
             continue
         if name in criterion.weight_dict:
             terms.append(value * criterion.weight_dict[name])

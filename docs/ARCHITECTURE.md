@@ -43,10 +43,12 @@ within-query list-wise ordering.
   audited historical checkpoints. Its IoU regression target retains a gradient
   path through predicted spans.
 - `src/bqc/qd_detr.py` explicitly detaches the IoU target. It is the corrected
-  implementation intended for the next controlled run.
+  BQC implementation used by the controlled rerun.
 
-Results from the corrected implementation are not reported yet. The distinction
-is kept explicit so source provenance and mechanism claims cannot be conflated.
+The corrected five-seed results are reported in
+[`results/mechanism_ablation_20260711.md`](../results/mechanism_ablation_20260711.md).
+The legacy source is retained so source provenance and current mechanism claims
+cannot be conflated.
 
 ## Train/Test Boundary
 

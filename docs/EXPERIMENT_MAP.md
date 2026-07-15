@@ -22,6 +22,6 @@
 - `bqc_joint_20260708`: joint objective; appendix-only negative control.
 - `bqc_paper_audit`: final evaluator and numeric audit.
 
-Historical names BQL and BQC refer to the same quality-learning line at
-different writing stages. New code and documentation should use BQC.
-
+The `bql_*` strings above are immutable historical server directory names from
+the project's earlier writing stage. They do not name a separate current
+method. All active source code, losses, and public interfaces use BQC.

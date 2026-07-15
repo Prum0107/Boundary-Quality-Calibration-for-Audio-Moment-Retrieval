@@ -203,11 +203,11 @@ class SetCriterion(nn.Module):
         self.span_loss_type = span_loss_type
         self.max_a_l = max_a_l
         self.saliency_margin = saliency_margin
-        self.bql_lambda_reg = 1.0
-        self.bql_lambda_cls = 1.0
-        self.bql_lambda_list = 0.5
-        self.bql_tau = 0.1
-        self.bql_iou_threshold = 0.7
+        self.bqc_lambda_reg = 1.0
+        self.bqc_lambda_cls = 1.0
+        self.bqc_lambda_list = 0.5
+        self.bqc_tau = 0.1
+        self.bqc_iou_threshold = 0.7
 
         # foreground and background classification
         self.foreground_label = 0
@@ -343,12 +343,11 @@ class SetCriterion(nn.Module):
         tgt_idx = torch.cat([tgt for (_, tgt) in indices])
         return batch_idx, tgt_idx
 
-    def loss_bql(self, outputs, targets, indices, **kwargs):
-        import torch.nn.functional as Fbql
+    def loss_bqc(self, outputs, targets, indices, **kwargs):
         pred_spans = outputs['pred_spans']
         quality_reg = outputs['quality_reg']
         quality_logit = outputs['quality_logit']
-        from span_utils import span_cxw_to_xx, temporal_iou
+        from span_utils import span_cxw_to_xx
         B, N = pred_spans.shape[:2]
         q_targets = pred_spans.new_zeros((B, N))
         span_labels = targets["span_labels"] if "span_labels" in targets else targets
@@ -367,19 +366,19 @@ class SetCriterion(nn.Module):
         # IoU is a supervision target, not a differentiable path back into
         # the predicted spans. The historical experiment omitted this detach.
         q_targets = q_targets.detach()
-        y_targets = (q_targets >= self.bql_iou_threshold).float()
+        y_targets = (q_targets >= self.bqc_iou_threshold).float()
         q_pred = torch.sigmoid(quality_reg)
-        L_qreg = Fbql.smooth_l1_loss(q_pred, q_targets)
-        L_qcls = Fbql.binary_cross_entropy_with_logits(quality_logit, y_targets)
+        L_qreg = F.smooth_l1_loss(q_pred, q_targets)
+        L_qcls = F.binary_cross_entropy_with_logits(quality_logit, y_targets)
         score = quality_logit
         with torch.no_grad():
-            soft_target = Fbql.softmax(q_targets / self.bql_tau, dim=1)
-        log_pred = Fbql.log_softmax(score, dim=1)
+            soft_target = F.softmax(q_targets / self.bqc_tau, dim=1)
+        log_pred = F.log_softmax(score, dim=1)
         L_list = -(soft_target * log_pred).sum(dim=1).mean()
         return {
-            "loss_bql_reg": L_qreg * self.bql_lambda_reg,
-            "loss_bql_cls": L_qcls * self.bql_lambda_cls,
-            "loss_bql_list": L_list * self.bql_lambda_list,
+            "loss_bqc_reg": L_qreg * self.bqc_lambda_reg,
+            "loss_bqc_cls": L_qcls * self.bqc_lambda_cls,
+            "loss_bqc_list": L_list * self.bqc_lambda_list,
         }
 
     def get_loss(self, loss, outputs, targets, indices, **kwargs):
@@ -387,7 +386,7 @@ class SetCriterion(nn.Module):
             "spans": self.loss_spans,
             "labels": self.loss_labels,
             "saliency": self.loss_saliency,
-            "bql": self.loss_bql,
+            "bqc": self.loss_bqc,
         }
         assert loss in loss_map, f'do you really want to compute {loss} loss?'
         return loss_map[loss](outputs, targets, indices, **kwargs)
@@ -419,7 +418,7 @@ class SetCriterion(nn.Module):
                 losses_target = self.losses
 
                 for loss in losses_target:
-                    if "saliency" == loss or "bql" == loss:  # skip as they are only in the top layer
+                    if "saliency" == loss or "bqc" == loss:  # skip as they are only in the top layer
                         continue
                     kwargs = {}
                     l_dict = self.get_loss(loss, aux_outputs, targets, indices, **kwargs)
@@ -501,9 +500,9 @@ def build_model(args):
         "loss_giou": args.giou_loss_coef,
         "loss_label": args.label_loss_coef,
         "loss_saliency": args.lw_saliency,
-        "loss_bql_reg": 1.0,
-        "loss_bql_cls": 1.0,
-        "loss_bql_list": 1.0,
+        "loss_bqc_reg": 1.0,
+        "loss_bqc_cls": 1.0,
+        "loss_bqc_list": 1.0,
     }
 
     if args.aux_loss:
@@ -512,7 +511,7 @@ def build_model(args):
             aux_weight_dict.update({k + f'_{i}': v for k, v in weight_dict.items() if k != "loss_saliency"})
         weight_dict.update(aux_weight_dict)
 
-    losses = ['spans', 'labels', 'saliency', 'bql']
+    losses = ['spans', 'labels', 'saliency', 'bqc']
     criterion = SetCriterion(
         matcher=matcher,
         weight_dict=weight_dict,

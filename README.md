@@ -111,6 +111,9 @@ Dataset features and trained checkpoints are not redistributed. Historical
 non-detached code is retained only for provenance; current claims use the
 corrected detached-target implementation in `src/bqc/`.
 
+Set `BQC_HOST_REPO` to a compatible QD-DETR AMR checkout before running the
+mechanism-ablation script.
+
 ## References
 
 - N. Carion et al., “End-to-End Object Detection with Transformers,” ECCV,
